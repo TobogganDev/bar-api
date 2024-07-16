@@ -71,6 +71,9 @@ class Media
     #[Assert\NotNull(groups: ['write'])]
     public ?File $file = null;
 
+    #[ORM\OneToOne(mappedBy: 'picture', cascade: ['persist', 'remove'])]
+    private ?Drink $drink = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -84,6 +87,28 @@ class Media
     public function setFilePath(?string $filePath): static
     {
         $this->filePath = $filePath;
+
+        return $this;
+    }
+
+    public function getDrink(): ?Drink
+    {
+        return $this->drink;
+    }
+
+    public function setDrink(?Drink $drink): static
+    {
+        // unset the owning side of the relation if necessary
+        if ($drink === null && $this->drink !== null) {
+            $this->drink->setPicture(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($drink !== null && $drink->getPicture() !== $this) {
+            $drink->setPicture($this);
+        }
+
+        $this->drink = $drink;
 
         return $this;
     }
