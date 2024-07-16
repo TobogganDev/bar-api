@@ -46,6 +46,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $id = null;
 
     #[ORM\Column(length: 180)]
+    #[Groups('read')]
     private ?string $uuid = null;
 
     /**
@@ -73,6 +74,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @var Collection<int, Order>
      */
     #[ORM\OneToMany(targetEntity: Order::class, mappedBy: 'waiter')]
+    #[Groups(['read', 'write'])]
     private Collection $orders;
 
     public function __construct()
