@@ -23,15 +23,16 @@ use ApiPlatform\Metadata\Delete;
 use App\State\UserPasswordHasherProcessor;
 
 #[ApiResource(
+    forceEager: false,
     normalizationContext: ['groups' => ['read']],
     denormalizationContext: ['groups' => ['write']],
     operations: [
-        new GetCollection(),
-        new Post(processor: UserPasswordHasherProcessor::class),
-        new Get(),
-        new Put(processor: UserPasswordHasherProcessor::class),
-        new Patch(processor: UserPasswordHasherProcessor::class),
-        new Delete(),
+        new GetCollection(security: "is_granted('ROLE_PATRON')", securityMessage: 'You are not allowed to get users'),
+        new Post(processor: UserPasswordHasherProcessor::class, security: "is_granted('ROLE_PATRON')", securityMessage: 'You are not allowed to get users'),
+        new Get(security: "is_granted('ROLE_PATRON')", securityMessage: 'You are not allowed to get users'),
+        new Put(processor: UserPasswordHasherProcessor::class, security: "is_granted('ROLE_PATRON')", securityMessage: 'You are not allowed to get users'),
+        new Patch(processor: UserPasswordHasherProcessor::class, security: "is_granted('ROLE_PATRON')", securityMessage: 'You are not allowed to get users'),
+        new Delete(security: "is_granted('ROLE_PATRON')", securityMessage: 'You are not allowed to get users'),
     ],
 )]
 #[ORM\Entity(repositoryClass: UserRepository::class)]

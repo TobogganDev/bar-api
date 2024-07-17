@@ -18,5 +18,7 @@ api_platform:
         extra_properties:
             standard_put: true
             rfc_7807_compliant_errors: true
+    eager_loading:
+        max_joins: 100
     keep_legacy_inflector: false
     use_symfony_listeners: true

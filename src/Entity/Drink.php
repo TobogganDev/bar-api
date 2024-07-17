@@ -6,30 +6,55 @@ use App\Repository\DrinkRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use ApiPlatform\Metadata\ApiResource;
+use Symfony\Component\Serializer\Attribute\Groups;
 
-#[ApiResource]
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
+use ApiPlatform\Metadata\Patch;
+use ApiPlatform\Metadata\Delete;
+
+#[ApiResource(
+    normalizationContext: ['groups' => ['read']],
+    denormalizationContext: ['groups' => ['write']],
+    forceEager: false,
+    operations: [
+        new GetCollection(),
+        new Get(security: "is_granted('ROLE_BARMAN')", securityMessage: 'You are not allowed to get orders'),
+        new Post(security: "is_granted('ROLE_BARMAN')"),
+        new Put(security: "is_granted('ROLE_BARMAN')"),
+        new Patch(security: "is_granted('ROLE_BARMAN')"),
+        new Delete(security: "is_granted('ROLE_BARMAN')")
+    ]
+)]
 #[ORM\Entity(repositoryClass: DrinkRepository::class)]
 class Drink
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups('read')]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['read', 'write'])]
     private ?string $name = null;
 
     #[ORM\Column]
+    #[Groups(['read', 'write'])]
     private ?float $price = null;
 
     #[ORM\OneToOne(inversedBy: 'drink', cascade: ['persist', 'remove'])]
+    #[Groups(['read', 'write'])]
     private ?Media $picture = null;
 
     /**
      * @var Collection<int, Order>
      */
     #[ORM\ManyToMany(targetEntity: Order::class, mappedBy: 'drinks')]
+    #[Groups('read')]
     private Collection $orders;
 
     public function __construct()
