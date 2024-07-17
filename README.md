@@ -46,7 +46,7 @@ symfony server:start
 
 ### Utilisation de Postman
 
-1. Importez la collection Postman fournie dans le dépôt : `collection.json`.
+1. Importez la collection Postman fournie dans le dépôt : `BAR-API_collection.json`.
    
 2. Assurez-vous que les requêtes sont correctement configurées avec les en-têtes nécessaires (par exemple, les jetons d'authentification JWT).
   
